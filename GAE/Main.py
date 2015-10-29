@@ -1,4 +1,5 @@
 from flask import Flask
+from flask import request
 from flask import abort
 from pprint import pprint
 import dropbox
@@ -37,6 +38,10 @@ def handle_url(path):
         metadata = client.metadata('/' + path)
     except:
         abort(404)
+
+    if "webhook" in path:
+
+
     print metadata['is_dir']
     if (metadata['is_dir']):
         return get_index(metadata)
@@ -49,6 +54,12 @@ def page_not_found(e):
     """Return a custom 404 error."""
     return 'Sorry, nothing at this URL. error 404', 404
 
+
+@app.route('/webhook', methods=['GET'])
+def verify():
+    '''Respond to the webhook verification (GET request) by echoing back the challenge parameter.'''
+
+    return request.args.get('challenge')
 
 def changes():
     global cursor

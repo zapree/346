@@ -9,6 +9,7 @@ your AWS credentials.
 """
 
 import boto.sqs
+from boto.sqs.message import Message
 import time
 
 __author__ = 'Eugene'
@@ -18,11 +19,7 @@ q = boto.sqs.connection.SQSConnection.lookup('compressqueue')
 if q is None:
     q = conn.create_queue('compressqueue', 30) # 30-second message visibility
 
-while True:
-    m = q.read(wait_time_seconds = 3) # wait up to 3 seconds for message
-    if m is None:
-        print "NO MESSAGE"
-    else:
-        print m.get_body()
-        time.sleep(1)
-        q.delete_message(m)
+for i in range(0,10):
+    m = Message()
+    m.set_body("Message %d" % i)
+    q.write(m)
