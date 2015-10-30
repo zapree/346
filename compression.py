@@ -19,7 +19,7 @@ def compress(fileloc):
     f, metadata = client.get_file_and_metadata(fileloc)
 
 
-    with f.read() as f_in, gzip.open('temp.gz', 'wb') as f_out:
+    with f as f_in, gzip.open('temp.gz', 'wb') as f_out:
         try:
             client.put_file(fileloc+'.gz', gzip.GzipFile(fileobj=f),overwrite=True)
         except:
