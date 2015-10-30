@@ -4,7 +4,7 @@ import shutil
 import dropbox
 import sys
 import ConfigParser
-import stopwatch
+
 
 
 __author__ = 'Eugene'
@@ -28,11 +28,9 @@ def compress(fileloc):
     print data
 
     with gzip.open('temp.gz', 'wb') as f_out:
-        shutil.copyfileobj(f.content, f_out)
+        f_out.write(data)
         try:
-            filename = '/'+fileloc+'.gz'
-            print filename
-            client.files_upload(f_out, filename, mode=dropbox.files.WriteMode.overwrite)
+            client.files_upload(f_out, fileloc+'.gz', mode=dropbox.files.WriteMode.overwrite)
         except:
             print "Unexpected error:", sys.exc_info()[0]
 
