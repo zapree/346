@@ -4,7 +4,6 @@ import shutil
 import dropbox
 import sys
 import ConfigParser
-import stopwatch
 
 
 __author__ = 'Eugene'
@@ -17,22 +16,16 @@ def compress(fileloc):
     config.read("settings.cfg")
 
     token = config.get('Dropbox', 'token')
-    client = dropbox.Dropbox(token)
+    client = dropbox.client.DropboxClient(token)
 
-    try:
-        md, res = client.files_download(fileloc)
-    except dropbox.exceptions.HttpError as err:
-        print('*** HTTP error', err)
-        return None
-    data = res.content
-    print data
+    f, metadata = client.get_file_and_metadata(fileloc)
+    print f.read()
+    #just saving
 
     with gzip.open('temp.gz', 'wb') as f_out:
-        shutil.copyfileobj(f.content, f_out)
+        shutil.copyfileobj(f, f_out)
         try:
-            filename = '/'+fileloc+'.gz'
-            print filename
-            client.files_upload(f_out, filename, mode=dropbox.files.WriteMode.overwrite)
+            client.put_file(fileloc+'.gz', f_out, overwrite=True)
         except:
             print "Unexpected error:", sys.exc_info()[0]
 
