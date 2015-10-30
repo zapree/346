@@ -25,6 +25,7 @@ def compress(fileloc):
 
     with gzip.open('temp.gz', 'wb') as f_out:
         shutil.copyfileobj(f, f_out)
+    with open('temp.gz', 'rb') as f_out:
         try:
             client.put_file(fileloc+'.gz', f_out, overwrite=True)
 
