@@ -1,8 +1,8 @@
 #!/usr/bin/python
 import gzip
+import shutil
 import dropbox
-import sys
-import ConfigParser
+import sys, getopt
 
 
 __author__ = 'Eugene'
@@ -17,10 +17,14 @@ def compress(fileloc):
     token = config.get('Dropbox', 'token')
     client = dropbox.client.DropboxClient(token)
     f, metadata = client.get_file_and_metadata(fileloc)
-    try:
-        client.put_file(fileloc+'.gz', gzip.GzipFile(fileobj=f), overwrite=True)
-    except:
-        print "Unexpected error:", sys.exc_info()[0]
+
+
+    with gzip.open('temp.gz', 'wb') as f_out:
+        shutil.copyfileobj(f, f_out)
+        try:
+            client.put_file(fileloc+'.gz', f_out, overwrite=True)
+        except:
+            print "Unexpected error:", sys.exc_info()[0]
 
 if __name__ == '__main__':
     compress(sys.argv[1])
