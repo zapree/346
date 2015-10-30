@@ -6,6 +6,7 @@ import sys
 import ConfigParser
 
 
+
 __author__ = 'Eugene'
 
 settingsfile = 'settings.cfg'
@@ -26,6 +27,7 @@ def compress(fileloc):
         shutil.copyfileobj(f, f_out)
         try:
             client.put_file(fileloc+'.gz', f_out, overwrite=True)
+
         except:
             print "Unexpected error:", sys.exc_info()[0]
 
