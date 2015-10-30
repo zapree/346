@@ -24,7 +24,9 @@ def compress(fileloc):
     with gzip.open('temp.gz', 'wb') as f_out:
         shutil.copyfileobj(f, f_out)
         try:
-            client.put_file(fileloc+'.gz', f_out, overwrite=True)
+            filename = '/'+fileloc+'.gz'
+            print filename
+            client.put_file(filename, f_out, overwrite=True)
         except:
             print "Unexpected error:", sys.exc_info()[0]
 
