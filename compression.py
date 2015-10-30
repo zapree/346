@@ -2,7 +2,8 @@
 import gzip
 import shutil
 import dropbox
-import sys, getopt
+import sys
+import ConfigParser
 
 
 __author__ = 'Eugene'
