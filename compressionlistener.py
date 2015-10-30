@@ -10,21 +10,48 @@ your AWS credentials.
 
 import boto.sqs
 import time
+import gzip
+import shutil
+import dropbox
+import sys
+import ConfigParser
 
 __author__ = 'Eugene'
 
-conn = boto.sqs.connect_to_region("us-west-2")
-q = conn.create_queue('compressqueue', 30) # 30-second message visibility
-if q is None:
-    print "could not create or connect to queue"
+config = ConfigParser.RawConfigParser()
+config.read("settings.cfg")
+
+token = config.get('Dropbox', 'token')
 
 
-else:
-    while True:
-        m = q.read(wait_time_seconds = 3) # wait up to 3 seconds for message
-        if m is None:
-            print "NO MESSAGE"
-        else:
-            print m.get_body()
-            time.sleep(1)
-            q.delete_message(m)
+def compress(fileloc):
+    client = dropbox.client.DropboxClient(token)
+
+    f, metadata = client.get_file_and_metadata(fileloc)
+    print f.read()
+    #just saving
+
+    with gzip.open('temp.gz', 'wb') as f_out:
+        shutil.copyfileobj(f, f_out)
+    with open('temp.gz', 'rb') as f_out:
+        try:
+            client.put_file(fileloc+'.gz', f_out, overwrite=True)
+
+        except:
+            print "Unexpected error:", sys.exc_info()[0]
+
+if __name__ == '__main__':
+    conn = boto.sqs.connect_to_region("us-west-2")
+    q = conn.create_queue('compressqueue', 30) # 30-second message visibility
+    if q is None:
+        print "could not create or connect to queue"
+
+
+    else:
+        while True:
+            m = q.read(wait_time_seconds = 3) # wait up to 3 seconds for message
+            if m is None:
+                print "NO MESSAGE"
+            else:
+                compress(m.get_body())
+                q.delete_message(m)
