@@ -17,8 +17,9 @@ def compress(fileloc):
 
     token = config.get('Dropbox', 'token')
     client = dropbox.client.DropboxClient(token)
-    f, metadata = client.get_file_and_metadata(fileloc)
 
+    f, metadata = client.get_file_and_metadata(fileloc)
+    print f.read()
 
     with gzip.open('temp.gz', 'wb') as f_out:
         shutil.copyfileobj(f, f_out)
