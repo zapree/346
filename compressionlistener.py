@@ -14,9 +14,7 @@ import time
 __author__ = 'Eugene'
 
 conn = boto.sqs.connect_to_region("us-west-2")
-q = boto.sqs.connection.SQSConnection.lookup('compressqueue')
-if q is None:
-    q = conn.create_queue('compressqueue', 30) # 30-second message visibility
+q = conn.create_queue('compressqueue', 30) # 30-second message visibility
 
 while True:
     m = q.read(wait_time_seconds = 3) # wait up to 3 seconds for message
