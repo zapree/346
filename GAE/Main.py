@@ -17,7 +17,7 @@ timelist = list()
 # Note: We don't need to call run() since our application is embedded within
 # the App Engine WSGI application server.
 
-config = ConfigParser.RawConfigParser()
+
 config.read("settings.cfg")
 token = config.get('Dropbox', 'token')
 
