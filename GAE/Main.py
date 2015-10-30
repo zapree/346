@@ -9,6 +9,9 @@ import boto
 import dropbox
 import ConfigParser
 
+__author__ = 'Eugene Balaguer'
+
+
 app = Flask(__name__)
 
 # Note: We don't need to call run() since our application is embedded within

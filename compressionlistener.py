@@ -9,14 +9,13 @@ your AWS credentials.
 """
 
 import boto.sqs
-import time
 import gzip
 import shutil
 import dropbox
 import sys
 import ConfigParser
 
-__author__ = 'Eugene'
+__author__ = 'Eugene Balaguer'
 
 config = ConfigParser.RawConfigParser()
 config.read("settings.cfg")
