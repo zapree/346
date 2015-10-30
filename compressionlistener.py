@@ -28,13 +28,14 @@ def compress(fileloc):
     client = dropbox.client.DropboxClient(token)
 
     f, metadata = client.get_file_and_metadata(fileloc)
-    print f.read()
+    #print f.read()
     #just saving
 
     with gzip.open('temp.gz', 'wb') as f_out:
         shutil.copyfileobj(f, f_out)
     with open('temp.gz', 'rb') as f_out:
         try:
+            print "compressing "+fileloc
             client.put_file(fileloc+'.gz', f_out, overwrite=True)
 
         except:
@@ -53,5 +54,6 @@ if __name__ == '__main__':
             if m is None:
                 print "NO MESSAGE"
             else:
+                print "message recieved"
                 compress(m.get_body())
                 q.delete_message(m)
