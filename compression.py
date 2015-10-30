@@ -1,8 +1,8 @@
 #!/usr/bin/python
 import gzip
-import shutil
 import dropbox
-import sys, getopt
+import sys
+import ConfigParser
 
 
 __author__ = 'Eugene'
@@ -11,11 +11,13 @@ settingsfile = 'settings.cfg'
 
 def compress(fileloc):
 
-#TODO:  open connection to dbx replace file with file location
-    with open(fileloc, 'rb') as f_in, gzip.open(fileloc+'.gz', 'wb') as f_out:
-        shutil.copyfileobj(f_in, f_out)
+    token = ConfigParser.config.get('Dropbox', 'token')
+    client = dropbox.client.DropboxClient(token)
+    f, metadata = client.get_file_and_metadata(fileloc)
 
-#TODO:  write to dbx with compressed file
+
+    with f.read() as f_in, gzip.open('temp.gz', 'wb') as f_out:
+        client.put_file(fileloc+'.gz', gzip.GzipFile(fileobj=f),overwrite=True)
 
 
 if __name__ == '__main__':
