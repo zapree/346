@@ -12,6 +12,8 @@ settingsfile = 'settings.cfg'
 def compress(fileloc):
 
     config = ConfigParser.RawConfigParser()
+    config.read("settings.cfg")
+
     token = config.get('Dropbox', 'token')
     client = dropbox.client.DropboxClient(token)
     f, metadata = client.get_file_and_metadata(fileloc)
